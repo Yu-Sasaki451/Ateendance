@@ -1,0 +1,12 @@
+#!/bin/sh
+
+blocked_files="$(git diff --cached --name-only | grep -E '(^|/)\.env(\..*)?$|^docker/mysql/data/|\.pem$|\.key$|\.p12$|\.pfx$|\.crt$|\.csr$')"
+
+if [ -n "$blocked_files" ]; then
+  echo "コミットを中止しました。秘密情報や自動生成ファイルの可能性があるものが含まれています。"
+  echo "$blocked_files"
+  echo "必要なら .gitignore と git status を確認してください。"
+  exit 1
+fi
+
+exit 0

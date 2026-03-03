@@ -3,3 +3,14 @@
 /.DS_Store
 /.idea/
 /.vscode/
+
+# Secret-like files
+**/.env
+**/.env.*
+!**/.env.example
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
+**/*.crt
+**/*.csr
