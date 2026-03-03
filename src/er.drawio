@@ -1,0 +1,25 @@
+<mxfile host="65bd71144e">
+    <diagram id="PTUo8XimeLEHjbpXpAFU" name="ページ1">
+        <mxGraphModel dx="1326" dy="746" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="管理者" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+                    <mxGeometry x="150" y="240" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="一般" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+                    <mxGeometry x="150" y="490" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="管理機能にログイン&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;管理機能からログアウト&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;日次勤怠一覧確認&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;勤怠詳細確認&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;勤怠修正&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;スタッフ一覧&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;スタッフごとの月次勤怠確認&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;修正申請一覧&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;修正申請の中身確認&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                    <mxGeometry x="420" y="80" width="260" height="260" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="会員登録ができる&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;システムの一般機能にログインできる&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;ログアウトできる&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;勤怠の打刻ができる&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;勤怠一覧の確認&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;勤怠詳細確認&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;修正申請&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;申請内容確認&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                    <mxGeometry x="420" y="400" width="260" height="260" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="一般ユーザー&lt;div&gt;管理者&lt;/div&gt;&lt;div&gt;勤怠登録&lt;/div&gt;&lt;div&gt;休憩&lt;/div&gt;&lt;div&gt;勤怠修正申請&lt;/div&gt;&lt;div&gt;勤怠修正履歴&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                    <mxGeometry x="120" y="30" width="170" height="170" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
