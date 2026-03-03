@@ -17,7 +17,10 @@ Route::middleware('guest')->group(function () {
     Route::view('/admin/login', 'auth.admin_login')->name('admin.login');
 });
 
-Route::middleware('auth')->group(function (){
+Route::middleware(['auth', 'role:user'])->group(function () {
     Route::view('/attendance','user.attendance')->name('user.attendance');
+});
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::view('/admin/attendance/list','admin.index')->name('admin.index');
 });
