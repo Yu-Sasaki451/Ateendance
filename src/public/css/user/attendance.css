@@ -1,0 +1,86 @@
+
+/*　-----　ヘッダー右側のナビ部分 -----*/
+
+.header-nav {
+    width: 400px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.nav-link {
+    text-decoration: none;
+    color: white;
+}
+
+.nav-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+/* ----- main部分 -----*/
+
+.main {
+    min-height: calc(100vh - 72px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: whitesmoke;
+}
+
+.attendance {
+    display: grid;
+    justify-items: center;
+}
+
+.attendance-status,
+.info-today,
+.info-now {
+    margin: 0;
+}
+
+.attendance-status {
+    background-color: rgb(200, 200, 200);
+    padding: 6px 16px;
+    border-radius: 9999px;
+    margin-bottom: 15px;
+}
+
+.info-today {
+    font-size: 26px;
+    margin-bottom: 20px;
+}
+
+.info-now {
+    font-size: 36px;
+    font-weight: bold;
+}
+
+.attendance-buttons {
+    display: flex;
+    gap: 40px;
+}
+
+.attendance-button {
+    width: 120px;
+    font-size: 20px;
+    padding: 4px 0;
+    margin-top: 50px;
+    border-radius: 14px;
+    cursor: pointer;
+    border: none;
+}
+
+.attendance-button--dark {
+    background-color: black;
+    color: white;
+}
+
+.attendance-button--light {
+    background-color: white;
+    color: black;
+}
