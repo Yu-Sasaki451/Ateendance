@@ -233,14 +233,19 @@ class AttendanceController extends Controller
             })
             ->all();
 
-        $nextIndex = count($breakRows);
-        $breakRows[] = [
-            'label' => $nextIndex === 0 ? '休憩時間' : '休憩時間' . ($nextIndex + 1),
-            'in_at' => '',
-            'out_at' => '',
-        ];
-
         $userName = $attendance->user->name ?? '';
+        $isPending = $attendance->correctionRequests()
+            ->where('status', 'pending')
+            ->exists();
+
+        if (!$isPending) {
+            $nextIndex = count($breakRows);
+            $breakRows[] = [
+                'label' => $nextIndex === 0 ? '休憩時間' : '休憩時間' . ($nextIndex + 1),
+                'in_at' => '',
+                'out_at' => '',
+            ];
+        }
 
         return view('user.attendance_detail', [
             'attendance' => $attendance,
@@ -249,66 +254,7 @@ class AttendanceController extends Controller
             'outAtLabel' => $outAtLabel,
             'breakRows' => $breakRows,
             'userName' => $userName,
+            'isPending' => $isPending,
         ]);
-    }
-
-    
-    public function update(Request $request, $id)
-    {
-        $attendance = Attendance::where('user_id', auth()->id())->findOrFail($id);
-        $date = $attendance->date;
-
-        $data = [
-            'in_at' => $date . ' ' . $request->input('in_at') . ':00',
-            'out_at' => $date . ' ' . $request->input('out_at') . ':00',
-            'note' => $request->input('note'),
-        ];
-
-        $attendance->update($data);
-
-        $breakData = [
-            'break_in_at' => $request->input('break_in_at', []),
-            'break_out_at' => $request->input('break_out_at', []),
-        ];
-
-        $existingBreakTimes = $attendance->breakTimes()
-            ->orderBy('id')
-            ->get();
-
-        $breakCount = count($breakData['break_in_at']);
-
-        for ($i = 0; $i < $breakCount; $i++) {
-            $breakInAt = $breakData['break_in_at'][$i] ?? '';
-            $breakOutAt = $breakData['break_out_at'][$i] ?? '';
-
-            if ($breakInAt === '' && $breakOutAt === '') {
-                if (isset($existingBreakTimes[$i])) {
-                    $existingBreakTimes[$i]->update([
-                        'in_at' => null,
-                        'out_at' => null,
-                    ]);
-                }
-                continue;
-            }
-
-            if ($breakInAt === '' || $breakOutAt === '') {
-                continue;
-            }
-
-            if (isset($existingBreakTimes[$i])) {
-                $existingBreakTimes[$i]->update([
-                    'in_at' => $date . ' ' . $breakInAt . ':00',
-                    'out_at' => $date . ' ' . $breakOutAt . ':00',
-                ]);
-            } else {
-                BreakTime::create([
-                    'attendance_id' => $attendance->id,
-                    'in_at' => $date . ' ' . $breakInAt . ':00',
-                    'out_at' => $date . ' ' . $breakOutAt . ':00',
-                ]);
-            }
-        }
-
-        return redirect('/attendance/list');
     }
 }

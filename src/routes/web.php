@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\AttendanceController;
+use App\Http\Controllers\CorrectionRequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +21,7 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/attendance',[AttendanceController::class,'index'])->name('user.attendance');
-    
+
     Route::post('/attendance/clock-in', [AttendanceController::class, 'clockIn'])->name('attendance.clock-in');
     Route::post('/attendance/clock-out', [AttendanceController::class, 'clockOut'])->name('attendance.clock-out');
     Route::post('/attendance/break-start', [AttendanceController::class, 'breakStart'])->name('attendance.break-start');
@@ -29,7 +30,9 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/attendance/list',[AttendanceController::class,'list'])->name('attendance.index');
 
     Route::get('/attendance/detail/{id}', [AttendanceController::class, 'detail'])->name('attendance.detail');
-    Route::post('/attendance/detail/{id}', [AttendanceController::class, 'update'])->name('attendance.detail.update');
+    Route::post('/attendance/detail/{id}', [CorrectionRequestController::class, 'store'])->name('attendance.detail.update');
+
+    Route::get('/stamp_correction_request/list',[CorrectionRequestController::class,'correctionIndex'])->name('correction.index');
 
 });
 

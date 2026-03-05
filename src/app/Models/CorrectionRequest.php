@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class CorrectionRequest extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'attendance_id',
+        'requested_in_at',
+        'requested_out_at',
+        'reason',
+        'status',
+        'note',
+    ];
+
+    public function attendance()
+    {
+        return $this->belongsTo(Attendance::class);
+    }
+}

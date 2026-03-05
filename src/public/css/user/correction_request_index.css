@@ -1,0 +1,46 @@
+.main {
+    min-height: calc(100vh - 72px);
+    background-color: whitesmoke;
+}
+
+
+.request-list {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding-top: 32px;
+    padding-bottom: 32px;
+}
+
+.page-title {
+    font-size: 24px;
+    font-weight: 700;
+    border-left: 6px solid #000;
+    padding-left: 16px;
+    margin-top: 0;
+    margin-bottom: 32px;
+}
+
+.tablist {
+    display: flex;
+    border-bottom: 2px solid black;
+    gap: 60px;
+    padding-left: 60px;
+}
+
+.tab-button {
+    border: none;
+    background: none;
+    margin-bottom: 10px;
+}
+
+.tab-button[aria-selected="true"] {
+    font-weight: bold;
+}
+
+.tab-panel table {
+    width: 100%;
+    background-color: white;
+    border-radius: 10px;
+    margin-top: 40px;
+}
