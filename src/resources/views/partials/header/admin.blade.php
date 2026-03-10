@@ -4,7 +4,7 @@
     <a class="nav-link" href="/stamp_correction_request/list">申請一覧</a>
     <form action="/logout" method="post">
         @csrf
-        <input type="hidden" name="logout_from" value="user">
+        <input type="hidden" name="logout_from" value="admin">
         <button class="nav-button" type="submit">ログアウト</button>
     </form>
 </nav>

@@ -64,7 +64,7 @@ class AttendanceController extends Controller
     }
 
     public function detail($id)
-{
+    {
     $attendance = Attendance::with(['user', 'breakTimes'])
         ->findOrFail($id);
 
@@ -121,6 +121,72 @@ class AttendanceController extends Controller
         'userName' => $userName,
         'isPending' => $isPending,
     ]);
-}
+    }
 
+    public function staff_list(){
+        $staffs = User::select('id','name','email')
+            ->where('role','user')
+            ->get();
+
+        return view('admin.staff_index',compact('staffs'));
+    }
+
+    public function staff_attendance(Request $request, $id)
+    {
+        $staff = User::where('role', 'user')->findOrFail($id);
+
+        $currentMonth = $request->filled('month')
+            ? Carbon::createFromFormat('Y-m', $request->month)
+            : now();
+
+        $attendances = Attendance::with('breakTimes')
+            ->where('user_id', $id)
+            ->whereYear('date', $currentMonth->year)
+            ->whereMonth('date', $currentMonth->month)
+            ->get()
+            ->keyBy('date');
+
+        $days = collect(\Carbon\CarbonPeriod::create(
+            $currentMonth->copy()->startOfMonth(),
+            $currentMonth->copy()->endOfMonth()
+        ))->map(function ($day) use ($attendances) {
+            $attendance = $attendances->get($day->toDateString());
+
+            $breakMinutes = $attendance
+                ? $attendance->breakTimes->sum(function ($breakTime) {
+                    if (!$breakTime->in_at || !$breakTime->out_at) {
+                        return 0;
+                    }
+
+                    return Carbon::parse($breakTime->out_at)->diffInMinutes(
+                        Carbon::parse($breakTime->in_at)
+                    );
+                })
+                : 0;
+
+            $workMinutes = $attendance && $attendance->in_at && $attendance->out_at
+                ? Carbon::parse($attendance->out_at)->diffInMinutes(
+                    Carbon::parse($attendance->in_at)
+                ) - $breakMinutes
+                : null;
+
+            return [
+                'id' => $attendance ? $attendance->id : null,
+                'label' => $day->format('m/d') . '(' . ['日', '月', '火', '水', '木', '金', '土'][$day->dayOfWeek] . ')',
+                'in_at' => $attendance && $attendance->in_at ? Carbon::parse($attendance->in_at)->format('H:i') : '',
+                'out_at' => $attendance && $attendance->out_at ? Carbon::parse($attendance->out_at)->format('H:i') : '',
+                'break_time' => $attendance ? sprintf('%d:%02d', intdiv($breakMinutes, 60), $breakMinutes % 60) : '',
+                'work_time' => is_null($workMinutes) ? '' : sprintf('%d:%02d', intdiv($workMinutes, 60), $workMinutes % 60),
+            ];
+        });
+
+        return view('admin.staff_attendance', [
+            'staffId' => $staff->id,
+            'pageTitle' => $staff->name . 'さんの勤怠一覧',
+            'days' => $days,
+            'currentMonthLabel' => $currentMonth->format('Y/m'),
+            'previousMonth' => $currentMonth->copy()->subMonth()->format('Y-m'),
+            'nextMonth' => $currentMonth->copy()->addMonth()->format('Y-m'),
+        ]);
+    }
 }

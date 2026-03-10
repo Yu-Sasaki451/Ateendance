@@ -5,16 +5,16 @@
 @endsection
 
 @section('header-menu')
-@include('partials.header.user')
+@include('partials.header.admin')
 @endsection
 
 @section('content')
 @include('partials.attendance.monthly_list', [
     'pageTitle' => $pageTitle,
     'currentMonthLabel' => $currentMonthLabel,
-    'previousMonthUrl' => route('attendance.index', ['month' => $previousMonth]),
-    'nextMonthUrl' => route('attendance.index', ['month' => $nextMonth]),
-    'detailRouteName' => 'attendance.detail',
+    'previousMonthUrl' => route('admin.staff.attendance', ['id' => $staffId, 'month' => $previousMonth]),
+    'nextMonthUrl' => route('admin.staff.attendance', ['id' => $staffId, 'month' => $nextMonth]),
+    'detailRouteName' => 'admin.attendance.detail',
     'days' => $days,
 ])
 @endsection

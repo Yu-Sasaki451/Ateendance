@@ -186,6 +186,7 @@ class AttendanceController extends Controller
         });
 
         return view('user.attendance_index', [
+            'pageTitle' => '勤怠一覧',
             'days' => $days,
             'currentMonthLabel' => $currentMonth->format('Y/m'),
             'previousMonth' => $currentMonth->copy()->subMonth()->format('Y-m'),

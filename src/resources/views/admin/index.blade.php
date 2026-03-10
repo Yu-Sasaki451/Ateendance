@@ -10,7 +10,7 @@
 
 @section('content')
 <div class="attendance-list">
-    <h1 class="page-title">{{ $titleDateLabel }}の勤怠</h1>
+    
 
     <div class="date-nav">
         <a class="date-link"
