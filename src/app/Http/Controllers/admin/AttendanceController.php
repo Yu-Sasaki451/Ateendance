@@ -211,7 +211,7 @@ class AttendanceController extends Controller
         $isPending = $correctionRequest?->status === 'pending';
         $isApproved = $correctionRequest?->status === 'approved';
 
-        if (!$isPending) {
+        if (!$isPending && !$isApproved) {
             $nextIndex = count($breakRows);
             $breakRows[] = [
                 'label' => $nextIndex === 0 ? '休憩' : '休憩' . ($nextIndex + 1),
@@ -275,7 +275,7 @@ class AttendanceController extends Controller
         }
     });
 
-    return redirect()->route('admin.attendance.detail', ['id' => $attendance->id]);
+    return redirect()->route('admin.index');
 }
 
 }

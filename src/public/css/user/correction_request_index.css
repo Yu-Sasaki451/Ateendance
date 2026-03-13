@@ -43,6 +43,7 @@
     background-color: white;
     border-radius: 10px;
     margin-top: 40px;
+    table-layout: fixed;
 }
 
 
@@ -61,4 +62,27 @@
     padding: 8px 40px 8px 15px;
 }
 
+.status-col {
+    width: 110px;
+}
+
+.name-col {
+    width: 120px;
+}
+
+.date-col {
+    width: 140px;
+}
+
+.reason-col {
+    width: 220px;
+}
+
+.request-col {
+    width: 140px;
+}
+
+.detail-col {
+    width: 80px;
+}
 

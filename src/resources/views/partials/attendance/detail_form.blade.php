@@ -21,9 +21,7 @@
             <th class="date-col">日付</th>
             <td class="date-col">
                 <div class="detail-inline-row">
-                    <span class="detail-date-text">{{ $dateYearLabel }}</span>
-                    <span class="detail-time-separator"></span>
-                    <span class="detail-date-text">{{ $dateMonthDayLabel }}</span>
+                    <span class="detail-date-text">{{ $dateLabel }}</span>
                 </div>
             </td>
         </tr>
@@ -32,9 +30,9 @@
             <td class="in-col">
                 <div class="detail-field">
                     <div class="detail-inline-row">
-                        <input class="detail-input detail-input-time" type="time" name="in_at" value="{{ $inAtLabel }}" @readonly($isPending)>
+                        <input class="detail-input detail-input-time" type="time" name="in_at" value="{{ $inAtLabel }}" @readonly($isPending || $isApproved)>
                         <span class="detail-time-separator">〜</span>
-                        <input class="detail-input detail-input-time" type="time" name="out_at" value="{{ $outAtLabel }}" @readonly($isPending)>
+                        <input class="detail-input detail-input-time" type="time" name="out_at" value="{{ $outAtLabel }}" @readonly($isPending || $isApproved)>
                     </div>
                     <div class="validate-error">
                         @error('attendance_time')
@@ -50,9 +48,9 @@
             <td class="break-col">
                 <div class="detail-field">
                     <div class="detail-inline-row">
-                        <input class="detail-input detail-input-time" type="time" name="break_in_at[]" value="{{ $breakRow['in_at'] }}" @readonly($isPending)>
+                        <input class="detail-input detail-input-time" type="time" name="break_in_at[]" value="{{ $breakRow['in_at'] }}" @readonly($isPending || $isApproved)>
                         <span class="detail-time-separator">〜</span>
-                        <input class="detail-input detail-input-time" type="time" name="break_out_at[]" value="{{ $breakRow['out_at'] }}" @readonly($isPending)>
+                        <input class="detail-input detail-input-time" type="time" name="break_out_at[]" value="{{ $breakRow['out_at'] }}" @readonly($isPending || $isApproved)>
                     </div>
                     <div class="validate-error">
                         @error("break_time.$loop->index")
@@ -67,7 +65,7 @@
             <th class="note-col">備考</th>
             <td class="note-col">
                 <div class="detail-field">
-                    <textarea class="detail-textarea" name="note" @readonly($isPending)>{{ $noteLabel }}</textarea>
+                    <textarea class="detail-textarea" name="note" @readonly($isPending || $isApproved)>{{ $noteLabel }}</textarea>
                     <div class="validate-error">
                         @error('note')
                         {{ $message }}
@@ -80,12 +78,12 @@
 
     @if($isPending && $isAdmin)
         <button class="detail-button" type="submit">承認</button>
+    @elseif($isApproved)
+        <p class="detail-pending-text">* 承認済みです。</p>
     @elseif($isAdmin)
         <button class="detail-button" type="submit">修正</button>
     @elseif($isPending)
         <p class="detail-pending-text">* 承認待ちのため修正はできません。</p>
-    @elseif($isApproved)
-        <p class="detail-pending-text">* 承認済みです。</p>
     @else
         <button class="detail-button" type="submit">修正</button>
     @endif

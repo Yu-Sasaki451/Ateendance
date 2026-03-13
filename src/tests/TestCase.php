@@ -17,6 +17,13 @@ abstract class TestCase extends BaseTestCase
         ], $overrides));
     }
 
+    protected function createRoleAdmin(array $overrides = []): User
+    {
+        return User::factory()->create(array_merge([
+            'role' => 'admin',
+        ], $overrides));
+    }
+
     protected function createAttendanceFor(User $user, array $overrides = []): Attendance
     {
         return Attendance::create(array_merge([
