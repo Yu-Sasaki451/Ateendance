@@ -23,7 +23,7 @@ Route::middleware('guest')->group(function () {
     Route::view('/admin/login', 'auth.admin_login')->name('admin.login');
 });
 
-Route::middleware(['auth', 'role:user'])->group(function () {
+Route::middleware(['auth', 'verified', 'role:user'])->group(function () {
     Route::get('/attendance',[UserAttendanceController::class,'index'])->name('user.attendance');
 
     Route::post('/attendance/clock-in', [UserAttendanceController::class, 'clockIn'])->name('attendance.clock-in');
