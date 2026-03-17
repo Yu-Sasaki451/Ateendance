@@ -15,14 +15,16 @@ class EmailVerificationTest extends TestCase
     {
         Notification::fake();
 
+        $email = 'verify_test@example.com';
+
         $this->post('/register', [
             'name' => 'テストユーザー',
-            'email' => 'verify_test@example.com',
+            'email' => $email,
             'password' => '12345678',
             'password_confirmation' => '12345678',
         ]);
 
-        $user = \App\Models\User::first();
+        $user = \App\Models\User::where('email', $email)->first();
 
         Notification::assertSentTo($user, VerifyEmail::class);
     }

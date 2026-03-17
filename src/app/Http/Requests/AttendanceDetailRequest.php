@@ -29,7 +29,7 @@ class AttendanceDetailRequest extends FormRequest
         'break_in_at.*' => ['nullable', 'date_format:H:i'],
         'break_out_at' => ['array'],
         'break_out_at.*' => ['nullable', 'date_format:H:i'],
-        'note' => ['required,max:100'],
+        'note' => ['required', 'max:100'],
     ];
     }
 

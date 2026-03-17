@@ -2,11 +2,14 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Carbon\Carbon;
 
 class AttendanceTest extends TestCase
 {
+    use RefreshDatabase;
+
     private $user;
 
     protected function setUp(): void
