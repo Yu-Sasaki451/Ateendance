@@ -39,6 +39,26 @@ class RegisterTest extends TestCase
         ->assertSessionHasErrors(['email' => 'メールアドレスを入力してください']);
     }
 
+    public function test_名前が20文字超過(){
+
+        $data = $this->base();
+        $data['name'] = '123456789012345678901';
+
+        $this->from('/register')
+        ->post('/register',$data)
+        ->assertSessionHasErrors(['name' => '20文字以内で入力してください']);
+    }
+
+    public function test_メールアドレス形式不正(){
+
+        $data = $this->base();
+        $data['email'] = 'test';
+
+        $this->from('/register')
+        ->post('/register',$data)
+        ->assertSessionHasErrors(['email' => 'アドレス形式で入力してください']);
+    }
+
     public function test_パスワード未入力(){
 
         $data = $this->base();

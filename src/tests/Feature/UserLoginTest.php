@@ -44,6 +44,18 @@ class UserLoginTest extends TestCase
         ->assertSessionHasErrors(['password' => 'パスワードを入力してください']);
     }
 
+    public function test_メールアドレス形式不正(){
+        $data = [
+            'email' => $this->user->email,
+            'password' => '12345678',
+        ];
+        $data['email'] = 'test';
+
+        $this->from('/login')
+        ->post('/login',$data)
+        ->assertSessionHasErrors(['email' => 'アドレス形式で入力してください']);
+    }
+
     public function test_メールアドレス不一致(){
         $data = [
             'email' => $this->user->email,

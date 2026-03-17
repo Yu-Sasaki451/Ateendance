@@ -29,7 +29,7 @@ class AttendanceDetailRequest extends FormRequest
         'break_in_at.*' => ['nullable', 'date_format:H:i'],
         'break_out_at' => ['array'],
         'break_out_at.*' => ['nullable', 'date_format:H:i'],
-        'note' => ['required'],
+        'note' => ['required,max:100'],
     ];
     }
 
@@ -40,7 +40,8 @@ class AttendanceDetailRequest extends FormRequest
         'out_at.date_format' => '出勤時間もしくは退勤時間が不適切な値です',
         'break_in_at.*.date_format' => '休憩時間が不適切な値です',
         'break_out_at.*.date_format' => '休憩時間もしくは退勤時間が不適切な値です',
-        'note.required' => '備考を記入してください'
+        'note.required' => '備考を記入してください',
+        'note.max' => '100文字以内で記入してください',
     ];
     }
 

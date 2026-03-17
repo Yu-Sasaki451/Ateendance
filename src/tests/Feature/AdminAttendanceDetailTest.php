@@ -129,4 +129,20 @@ class AdminAttendanceDetailTest extends TestCase
             'note' =>'備考を記入してください'
         ]);
     }
+
+    public function test_備考欄が100文字超過でエラーメッセージ表示(){
+        $attendance = $this->createAttendanceFor($this->user,[
+            'date' => '2026-03-10',
+            'in_at' => '2026-03-10 09:00',
+            'out_at' => '2026-03-10 18:00',
+        ]);
+
+        $response = $this->actingAs($this->admin)->post('/admin/attendance/' . $attendance->id, [
+            'note' => str_repeat('あ', 101),
+        ]);
+
+        $response->assertSessionHasErrors([
+            'note' =>'100文字以内で記入してください'
+        ]);
+    }
 }
