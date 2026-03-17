@@ -140,4 +140,4 @@ php artisan test
 
 ## ER 図
 
-ER 図ファイルは [src/er.drawio](/Users/apple/coachtech/laravel/attendance/src/er.drawio) にあります。
+![ER図](./src/public/er.png)
