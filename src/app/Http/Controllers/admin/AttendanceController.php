@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Attendance;
 use App\Models\User;
 use App\Models\CorrectionRequest;
+use App\Services\AttendanceDetailViewService;
 use App\Services\AttendanceMonthlySummaryService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -15,11 +16,16 @@ use App\Http\Requests\AttendanceDetailRequest;
 
 class AttendanceController extends Controller
 {
+    private AttendanceDetailViewService $attendanceDetailViewService;
     private AttendanceMonthlySummaryService $attendanceMonthlySummaryService;
 
-    public function __construct(AttendanceMonthlySummaryService $attendanceMonthlySummaryService)
+    public function __construct(
+        AttendanceMonthlySummaryService $attendanceMonthlySummaryService,
+        AttendanceDetailViewService $attendanceDetailViewService
+    )
     {
         $this->attendanceMonthlySummaryService = $attendanceMonthlySummaryService;
+        $this->attendanceDetailViewService = $attendanceDetailViewService;
     }
 
     public function index(Request $request)
@@ -134,79 +140,18 @@ class AttendanceController extends Controller
     private function renderDetail(Attendance $attendance, ?CorrectionRequest $correctionRequest)
     {
         $isAdmin = auth()->user()->role === 'admin';
-
-        $dateYearLabel = $attendance->date
-            ? Carbon::parse($attendance->date)->format('Y年')
-            : '';
-
-        $dateMonthDayLabel = $attendance->date
-            ? Carbon::parse($attendance->date)->format('n月j日')
-            : '';
-
-        $inAtLabel = $correctionRequest && $correctionRequest->requested_in_at
-            ? Carbon::parse($correctionRequest->requested_in_at)->format('H:i')
-            : ($attendance->in_at ? Carbon::parse($attendance->in_at)->format('H:i') : '');
-
-        $outAtLabel = $correctionRequest && $correctionRequest->requested_out_at
-            ? Carbon::parse($correctionRequest->requested_out_at)->format('H:i')
-            : ($attendance->out_at ? Carbon::parse($attendance->out_at)->format('H:i') : '');
-
-        $noteLabel = $correctionRequest
-            ? $correctionRequest->note
-            : $attendance->note;
-
-        $breakTimes = $correctionRequest
-            ? $correctionRequest->breakTimes
-            : $attendance->breakTimes;
-
-        $breakRows = $breakTimes
-            ->values()
-            ->map(function ($breakTime) use ($correctionRequest) {
-                return [
-                    'in_at' => $correctionRequest
-                        ? ($breakTime->requested_in_at ? Carbon::parse($breakTime->requested_in_at)->format('H:i') : '')
-                        : ($breakTime->in_at ? Carbon::parse($breakTime->in_at)->format('H:i') : ''),
-                    'out_at' => $correctionRequest
-                        ? ($breakTime->requested_out_at ? Carbon::parse($breakTime->requested_out_at)->format('H:i') : '')
-                        : ($breakTime->out_at ? Carbon::parse($breakTime->out_at)->format('H:i') : ''),
-                ];
-            })
-            ->filter(function ($breakRow) {
-                return $breakRow['in_at'] !== '' || $breakRow['out_at'] !== '';
-            })
-            ->values()
-            ->map(function ($breakRow, $index) {
-                $breakRow['label'] = $index === 0 ? '休憩' : '休憩' . ($index + 1);
-                return $breakRow;
-            })
-            ->all();
-
-        $isPending = $correctionRequest?->status === 'pending';
         $isApproved = $correctionRequest?->status === 'approved';
 
-        if (!$isPending && !$isApproved) {
-            $nextIndex = count($breakRows);
-            $breakRows[] = [
-                'label' => $nextIndex === 0 ? '休憩' : '休憩' . ($nextIndex + 1),
-                'in_at' => '',
-                'out_at' => '',
-            ];
-        }
-
-        return view('admin.detail', [
-            'attendance' => $attendance,
-            'correctionRequest' => $correctionRequest,
-            'dateYearLabel' => $dateYearLabel,
-            'dateMonthDayLabel' => $dateMonthDayLabel,
-            'inAtLabel' => $inAtLabel,
-            'outAtLabel' => $outAtLabel,
-            'noteLabel' => $noteLabel,
-            'breakRows' => $breakRows,
-            'userName' => $attendance->user->name ?? '',
-            'isPending' => $isPending,
-            'isApproved' => $isApproved,
-            'isAdmin' => $isAdmin,
-        ]);
+        return view('admin.detail', array_merge(
+            ['correctionRequest' => $correctionRequest],
+            $this->attendanceDetailViewService->build(
+                $attendance,
+                $correctionRequest,
+                $isAdmin,
+                $isApproved,
+                '休憩'
+            )
+        ));
     }
 
     private function formatDateTime($date, $time)

@@ -6,16 +6,22 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Attendance;
 use App\Models\BreakTime;
+use App\Services\AttendanceDetailViewService;
 use App\Services\AttendanceMonthlySummaryService;
 use Carbon\Carbon;
 
 class AttendanceController extends Controller
 {
+    private AttendanceDetailViewService $attendanceDetailViewService;
     private AttendanceMonthlySummaryService $attendanceMonthlySummaryService;
 
-    public function __construct(AttendanceMonthlySummaryService $attendanceMonthlySummaryService)
+    public function __construct(
+        AttendanceMonthlySummaryService $attendanceMonthlySummaryService,
+        AttendanceDetailViewService $attendanceDetailViewService
+    )
     {
         $this->attendanceMonthlySummaryService = $attendanceMonthlySummaryService;
+        $this->attendanceDetailViewService = $attendanceDetailViewService;
     }
 
     public function index()
@@ -176,81 +182,16 @@ class AttendanceController extends Controller
             ->latest()
             ->first();
 
-        $dateYearLabel = $attendance->date
-            ? Carbon::parse($attendance->date)->format('Y年')
-            : '';
-
-        $dateMonthDayLabel = $attendance->date
-            ? Carbon::parse($attendance->date)->format('n月j日')
-            : '';
-
-        $inAtLabel = $pendingRequest && $pendingRequest->requested_in_at
-            ? Carbon::parse($pendingRequest->requested_in_at)->format('H:i')
-            : ($attendance->in_at ? Carbon::parse($attendance->in_at)->format('H:i') : '');
-
-        $outAtLabel = $pendingRequest && $pendingRequest->requested_out_at
-            ? Carbon::parse($pendingRequest->requested_out_at)->format('H:i')
-            : ($attendance->out_at ? Carbon::parse($attendance->out_at)->format('H:i') : '');
-
-        $noteLabel = $pendingRequest
-            ? $pendingRequest->note
-            : $attendance->note;
-
-        $breakTimes = $pendingRequest
-            ? $pendingRequest->breakTimes
-            : $attendance->breakTimes;
-
-        $breakRows = $breakTimes
-            ->values()
-            ->map(function ($breakTime) use ($pendingRequest) {
-                return [
-                    'in_at' => $pendingRequest
-                        ? ($breakTime->requested_in_at ? Carbon::parse($breakTime->requested_in_at)->format('H:i') : '')
-                        : ($breakTime->in_at ? Carbon::parse($breakTime->in_at)->format('H:i') : ''),
-                    'out_at' => $pendingRequest
-                        ? ($breakTime->requested_out_at ? Carbon::parse($breakTime->requested_out_at)->format('H:i') : '')
-                        : ($breakTime->out_at ? Carbon::parse($breakTime->out_at)->format('H:i') : ''),
-                ];
-            })
-            ->filter(function ($breakRow) {
-                return $breakRow['in_at'] !== '' || $breakRow['out_at'] !== '';
-            })
-            ->values()
-            ->map(function ($breakRow, $index) {
-                $breakRow['label'] = $index === 0 ? '休憩時間' : '休憩時間' . ($index + 1);
-                return $breakRow;
-            })
-            ->all();
-
-        $userName = $attendance->user->name ?? '';
-        $isPending = !is_null($pendingRequest);
         $isApproved = $attendance->correctionRequests()
             ->where('status', 'approved')
             ->exists();
 
-
-
-        if (!$isPending && !$isApproved) {
-            $nextIndex = count($breakRows);
-            $breakRows[] = [
-                'label' => $nextIndex === 0 ? '休憩時間' : '休憩時間' . ($nextIndex + 1),
-                'in_at' => '',
-                'out_at' => '',
-            ];
-        }
-
-        return view('user.attendance_detail', [
-            'attendance' => $attendance,
-            'dateYearLabel' => $dateYearLabel,
-            'dateMonthDayLabel' => $dateMonthDayLabel,
-            'inAtLabel' => $inAtLabel,
-            'outAtLabel' => $outAtLabel,
-            'noteLabel' => $noteLabel,
-            'breakRows' => $breakRows,
-            'userName' => $userName,
-            'isPending' => $isPending,
-            'isApproved' => $isApproved,
-            'isAdmin' => $isAdmin,
-        ]);
+        return view('user.attendance_detail', $this->attendanceDetailViewService->build(
+            $attendance,
+            $pendingRequest,
+            $isAdmin,
+            $isApproved,
+            '休憩時間'
+        ));
     }
 }

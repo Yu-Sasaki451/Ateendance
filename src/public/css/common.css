@@ -5,6 +5,20 @@
     padding: 15px;
 }
 
+.main {
+    min-height: calc(100vh - 72px);
+    background-color: whitesmoke;
+}
+
+.page-title {
+    font-size: 24px;
+    font-weight: 700;
+    border-left: 6px solid #000;
+    padding-left: 16px;
+    margin-top: 0;
+    margin-bottom: 32px;
+}
+
 
 .header-inner--right {
     font-size: 20px;
@@ -54,6 +68,10 @@
 
     .header-nav--user {
         width: 300px;
+    }
+
+    .page-title {
+        font-size: 22px;
     }
 
     .header-inner--right,

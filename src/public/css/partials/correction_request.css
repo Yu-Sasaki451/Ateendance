@@ -1,24 +1,9 @@
-.main {
-    min-height: calc(100vh - 72px);
-    background-color: whitesmoke;
-}
-
-
 .request-list {
     width: 100%;
     max-width: 900px;
     margin: 0 auto;
     padding-top: 32px;
     padding-bottom: 32px;
-}
-
-.page-title {
-    font-size: 24px;
-    font-weight: 700;
-    border-left: 6px solid #000;
-    padding-left: 16px;
-    margin-top: 0;
-    margin-bottom: 32px;
 }
 
 .tablist {
@@ -46,8 +31,7 @@
     table-layout: fixed;
 }
 
-
-/* -----　テーブル　-----*/
+/* ----- テーブル -----*/
 
 .table-header__row {
     border-bottom: 2px solid gainsboro;
@@ -93,10 +77,6 @@
         max-width: 700px;
     }
 
-    .page-title {
-        font-size: 22px;
-    }
-
     .request-list__table th,td {
         font-size: 14px;
         padding: 10px 8px;
@@ -127,4 +107,3 @@
     }
 
 }
-
