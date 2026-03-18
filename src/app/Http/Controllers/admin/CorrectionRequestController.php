@@ -20,7 +20,10 @@ class CorrectionRequestController extends Controller
                 'target_date' => Carbon::parse($request->requested_in_at)->format('Y/m/d'),
                 'reason' => $request->reason,
                 'applied_date' => $request->created_at->format('Y/m/d'),
-                'detail_url' => route('admin.attendance.detail', ['id' => $request->attendance_id]),
+                'detail_url' => route('admin.attendance.detail', [
+                    'id' => $request->attendance_id,
+                    'from' => 'request',
+                ]),
             ];
         };
 

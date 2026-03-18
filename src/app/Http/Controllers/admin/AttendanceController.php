@@ -81,7 +81,7 @@ class AttendanceController extends Controller
         ]);
     }
 
-    public function detail($id)
+    public function detail(Request $request, $id)
     {
         $attendance = Attendance::with([
             'user',
@@ -102,7 +102,17 @@ class AttendanceController extends Controller
             })
             ->first();
 
-        return $this->renderDetail($attendance, $correctionRequest);
+        $fromCorrectionRequestList = $request->query('from') === 'request';
+        $displayCorrectionRequest = $fromCorrectionRequestList ? $correctionRequest : null;
+        $hasPendingCorrectionRequest = $attendance->correctionRequests
+            ->contains(fn ($request) => $request->status === 'pending');
+
+        return $this->renderDetail(
+            $attendance,
+            $displayCorrectionRequest,
+            $fromCorrectionRequestList,
+            $hasPendingCorrectionRequest
+        );
     }
 
     public function staff_list(){
@@ -137,13 +147,23 @@ class AttendanceController extends Controller
         ]);
     }
 
-    private function renderDetail(Attendance $attendance, ?CorrectionRequest $correctionRequest)
+    private function renderDetail(
+        Attendance $attendance,
+        ?CorrectionRequest $correctionRequest,
+        bool $fromCorrectionRequestList,
+        bool $hasPendingCorrectionRequest
+    )
     {
         $isAdmin = auth()->user()->role === 'admin';
         $isApproved = $correctionRequest?->status === 'approved';
+        $showPendingMessage = $isAdmin && !$fromCorrectionRequestList && $hasPendingCorrectionRequest;
 
         return view('admin.detail', array_merge(
-            ['correctionRequest' => $correctionRequest],
+            [
+                'correctionRequest' => $correctionRequest,
+                'fromCorrectionRequestList' => $fromCorrectionRequestList,
+                'showPendingMessage' => $showPendingMessage,
+            ],
             $this->attendanceDetailViewService->build(
                 $attendance,
                 $correctionRequest,

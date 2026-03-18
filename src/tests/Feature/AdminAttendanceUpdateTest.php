@@ -161,7 +161,7 @@ class AdminAttendanceUpdateTest extends TestCase
             'note' => 'ユーザー備考',
         ]);
 
-        $response = $this->actingAs($this->admin)->get('/admin/attendance/' . $attendance->id);
+        $response = $this->actingAs($this->admin)->get('/admin/attendance/' . $attendance->id . '?from=request');
 
         $response->assertStatus(200);
         $response->assertSee('勤怠詳細');

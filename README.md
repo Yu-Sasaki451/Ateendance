@@ -109,7 +109,7 @@ php artisan migrate --seed
 
 ## 動作確認 URL
 
-- アプリ: [http://localhost](http://localhost)
+- 一般ユーザーログイン: [http://localhost/login](http://localhost/login)
 - 管理者ログイン: [http://localhost/admin/login](http://localhost/admin/login)
 - phpMyAdmin: [http://localhost:8080](http://localhost:8080)
 - MailHog: [http://localhost:8025](http://localhost:8025)
