@@ -205,6 +205,7 @@ class AttendanceUpdateTest extends TestCase
 
         $response = $this->get('/stamp_correction_request/list?tab=pending');
         $response->assertStatus(200);
+
         $response->assertSee('/attendance/detail/' . $attendance->id, false);
         
         $response = $this->get('/attendance/detail/' . $attendance->id);

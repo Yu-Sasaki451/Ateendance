@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\CorrectionRequest;
+use App\Services\AttendanceDetailViewService;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -11,6 +12,13 @@ use Illuminate\Support\Facades\DB;
 
 class CorrectionRequestController extends Controller
 {
+    private AttendanceDetailViewService $attendanceDetailViewService;
+
+    public function __construct(AttendanceDetailViewService $attendanceDetailViewService)
+    {
+        $this->attendanceDetailViewService = $attendanceDetailViewService;
+    }
+
     public function correctionIndex(Request $request)
     {
         $formatRequest = function ($request) {
@@ -20,9 +28,8 @@ class CorrectionRequestController extends Controller
                 'target_date' => Carbon::parse($request->requested_in_at)->format('Y/m/d'),
                 'reason' => $request->reason,
                 'applied_date' => $request->created_at->format('Y/m/d'),
-                'detail_url' => route('admin.attendance.detail', [
-                    'id' => $request->attendance_id,
-                    'from' => 'request',
+                'detail_url' => route('admin.correction.show', [
+                    'id' => $request->id,
                 ]),
             ];
         };
@@ -42,6 +49,33 @@ class CorrectionRequestController extends Controller
             ->map($formatRequest);
 
         return view('admin.correction_request_index', compact('pendingRequests', 'approvedRequests', 'activeTab'));
+    }
+
+    public function show($id)
+    {
+        $correctionRequest = CorrectionRequest::with([
+            'attendance.user',
+            'attendance.breakTimes',
+            'attendance.correctionRequests.breakTimes',
+            'breakTimes',
+        ])->findOrFail($id);
+
+        $attendance = $correctionRequest->attendance;
+
+        return view('admin.detail', array_merge(
+            [
+                'correctionRequest' => $correctionRequest,
+                'fromCorrectionRequestList' => true,
+                'showPendingMessage' => false,
+            ],
+            $this->attendanceDetailViewService->build(
+                $attendance,
+                $correctionRequest,
+                true,
+                $correctionRequest->status === 'approved',
+                '休憩'
+            )
+        ));
     }
 
     public function approve($id){
@@ -72,7 +106,7 @@ class CorrectionRequestController extends Controller
         ]);
         });
 
-        return redirect()->route('admin.attendance.detail', ['id' => $attendance->id]);
+        return redirect()->route('admin.correction.show', ['id' => $correctionRequest->id]);
 
     }
 }

@@ -161,7 +161,11 @@ class AdminAttendanceUpdateTest extends TestCase
             'note' => 'ユーザー備考',
         ]);
 
-        $response = $this->actingAs($this->admin)->get('/admin/attendance/' . $attendance->id . '?from=request');
+        $correctionRequest = \App\Models\CorrectionRequest::where('attendance_id', $attendance->id)
+            ->where('status', 'pending')
+            ->first();
+
+        $response = $this->actingAs($this->admin)->get('/stamp_correction_request/approve/' . $correctionRequest->id);
 
         $response->assertStatus(200);
         $response->assertSee('勤怠詳細');
@@ -205,6 +209,8 @@ class AdminAttendanceUpdateTest extends TestCase
 
         $response = $this->actingAs($this->admin)
             ->post('/stamp_correction_request/approve/' . $correctionRequest->id);
+
+        $response->assertRedirect('/stamp_correction_request/approve/' . $correctionRequest->id);
 
         $attendance->refresh();
 
