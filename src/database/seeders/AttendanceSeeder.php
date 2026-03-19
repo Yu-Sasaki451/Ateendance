@@ -18,8 +18,8 @@ class AttendanceSeeder extends Seeder
     public function run()
     {
         $users = User::where('role', 'user')->orderBy('id')->get();
-        $startDate = Carbon::today()->subMonths(3);
-        $endDate = Carbon::today()->subDay();
+        $startDate = Carbon::today()->subMonths(1);
+        $endDate = Carbon::today()->addMonths(1);
 
         foreach ($users as $user) {
             for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
