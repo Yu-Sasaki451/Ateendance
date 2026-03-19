@@ -52,7 +52,8 @@ docker compose up -d --build
 
 ```bash
 docker compose exec php bash
-cd /var/www
+```
+```bash
 composer install
 cp .env.example .env
 ```
@@ -134,7 +135,6 @@ docker compose exec mysql mysql -uroot -proot -e "GRANT ALL PRIVILEGES ON attend
 その後、PHP コンテナ内で以下を実行してください。
 
 ```bash
-cd /var/www
 php artisan test
 ```
 
