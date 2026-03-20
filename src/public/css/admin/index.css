@@ -20,6 +20,7 @@
 
 .date-link {
     text-decoration: none;
+    color: gray;
 }
 
 .date-current {
@@ -40,6 +41,7 @@
     text-align: center;
     padding: 8px 20px;
     font-size: 20px;
+    color: gray;
 }
 
 .table-title {

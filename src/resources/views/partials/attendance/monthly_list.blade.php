@@ -25,7 +25,7 @@
             <td>{{ $day['work_time'] }}</td>
             <td>
                 @if($day['id'])
-                <a href="{{ route($detailRouteName, ['id' => $day['id']]) }}">詳細</a>
+                <a class="link-detail" href="{{ route($detailRouteName, ['id' => $day['id']]) }}">詳細</a>
                 @endif
             </td>
         </tr>

@@ -44,6 +44,7 @@
 .request-list__table th,td {
     text-align: center;
     padding: 8px 40px 8px 15px;
+    color: gray;
 }
 
 .status-col {
